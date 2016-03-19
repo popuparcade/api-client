@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/popuparcade/api-client#readme",
   "devDependencies": {
-    "each-async": "^1.1.1",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.2"
   },

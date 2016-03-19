@@ -25,12 +25,10 @@ module.exports = function (config) {
   /*
    * GET a specific player
    */
-  // TODO: this doesn't seem to work
   app.getPlayer = function (options, callback) {
     request({
-      url: host + 'players',
+      url: host + 'players/' + options.playerId,
       method: 'GET',
-      json: options.body,
       headers: { 'Content-Type': 'application/json' }
     }, function (err, res, body) {
       if (err) return callback(err)

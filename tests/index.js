@@ -1,7 +1,6 @@
 var test = require('tape')
 var config = require('../config')
 var app = require('../index')(config)
-var eachAsync = require('each-async');
 
 // Our dataset for testing, which should not already exist
 var TEST_HOST = config.host || 'http://127.0.0.1:8001/api/'
@@ -31,8 +30,8 @@ test('get lead players', function (t) {
 })
 
 var newPlayer = {
-  "PlayerId":"0",
-  "CodeName": "New Goat2",
+  "PlayerId": 0,
+  "CodeName": "New Goat3",
   "PicURL": "NULL",
   "ConsoleId": "1",
   "StartTime": "2016-03-19T11:40:20",
@@ -49,34 +48,37 @@ test('add a new player', function (t) {
   })
 })
 
+test('get a specific player', function (t) {
+  app.getPlayer({ "playerId": "14" }, function (err, res) {
+    t.notOk(err)
+    t.ok(res)
+    // console.log(JSON.parse(res))
+    console.log(JSON.parse(res))
+    t.end()
+  })
+})
+
 var playerUpdate = {
-  "PlayerId":"14",
+  "PlayerId": 14,
   // PlayerSession info:
   "ConsoleId": "3", // When player has completed console 3, they are no longer active
   "StartTime": "2016-03-19T11:40:20",
   "EndTime": " 2016-03-19T11:40:20",
-  "Score": "102"
+  "Score": "103"
 }
 
 test('update an existing player\'s PlayerSession', function (t) {
   app.putPlayer({ body: playerUpdate }, function (err) {
     t.notOk(err)
 
-    // Double check our update by finding our player and printing that
-    // player's PlayerSessions
-    app.getPlayers({}, function (err, res) {
+    // Double check our update by finding our player and printer their sessions:
+    app.getPlayer({ "playerId": playerUpdate.PlayerId }, function (err, res) {
       t.notOk(err)
       t.ok(res)
-      var players = JSON.parse(res)
-      eachAsync(players, function (player, index, done) {
-        if (player.Id == playerUpdate["PlayerId"]) {
-          console.log("Updated player:", player)
-        }
-        done();
-      }, function (error) {
-        t.notOk(error)
-        t.end()
-      });
+      var updatedPlayer = JSON.parse(res)
+      t.ok(updatedPlayer.Id == playerUpdate.PlayerId)
+      console.log("Updated player:", updatedPlayer)
+      t.end()
     })
   })
 })
@@ -90,13 +92,3 @@ test('get lead players again for verification', function (t) {
   })
 })
 
-// TODO: We are unable to fetch a specific player
-// test('get a specific player', function (t) {
-//   app.getPlayer({ body: { "PlayerId":"14" } }, function (err, res) {
-//     t.notOk(err)
-//     t.ok(res)
-//     // console.log(JSON.parse(res))
-//     console.log(res)
-//     t.end()
-//   })
-// })
