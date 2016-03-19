@@ -8,17 +8,23 @@ var USERNAME = config.username || 'admin'
 var PASSWORD = config.password || 'sodasoda'
 
 /*
- * LOG IN
+ * GET Players
  */
 // Assume that we already have a superuser names USERNAME with password 'sodasoda'
 test('get all players', function (t) {
-  console.log("sending request")
   app.getPlayers({}, function (err, res) {
-    console.log("response returned")
     t.notOk(err)
     t.ok(res)
-    console.log("res:", res)
+    console.log(JSON.parse(res))
     t.end()
   })
 })
 
+test('get lead players', function (t) {
+  app.getLeaderPlayers({}, function (err, res) {
+    t.notOk(err)
+    t.ok(res)
+    console.log(JSON.parse(res))
+    t.end()
+  })
+})
