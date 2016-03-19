@@ -31,7 +31,7 @@ test('get lead players', function (t) {
 })
 
 var newPlayer = {
-  "PlayerId":"15",
+  "PlayerId":"0",
   "CodeName": "New Goat2",
   "PicURL": "NULL",
   "ConsoleId": "1",
@@ -52,10 +52,10 @@ test('add a new player', function (t) {
 var playerUpdate = {
   "PlayerId":"14",
   // PlayerSession info:
-  "ConsoleId": "2",
+  "ConsoleId": "3", // When player has completed console 3, they are no longer active
   "StartTime": "2016-03-19T11:40:20",
   "EndTime": " 2016-03-19T11:40:20",
-  "Score": "101"
+  "Score": "102"
 }
 
 test('update an existing player\'s PlayerSession', function (t) {
@@ -81,13 +81,22 @@ test('update an existing player\'s PlayerSession', function (t) {
   })
 })
 
-// TODO: We are unable to fetch a specific player
-test('get a specific player', function (t) {
-  app.getPlayer({ body: { "PlayerId":"14" } }, function (err, res) {
+test('get lead players again for verification', function (t) {
+  app.getLeaderPlayers({}, function (err, res) {
     t.notOk(err)
     t.ok(res)
-    // console.log(JSON.parse(res))
-    console.log(res)
+    console.log(JSON.parse(res))
     t.end()
   })
 })
+
+// TODO: We are unable to fetch a specific player
+// test('get a specific player', function (t) {
+//   app.getPlayer({ body: { "PlayerId":"14" } }, function (err, res) {
+//     t.notOk(err)
+//     t.ok(res)
+//     // console.log(JSON.parse(res))
+//     console.log(res)
+//     t.end()
+//   })
+// })
